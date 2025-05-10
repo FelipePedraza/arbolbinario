@@ -13,6 +13,10 @@ public class App extends Application {
         Scene scene = new Scene(root, 800, 600);
         stage.setTitle("Árbol Binario");
         stage.setScene(scene);
+        stage.setMinWidth(800);
+        stage.setMinHeight(550);
+        stage.setResizable(true);
+        
         stage.show();
     }
 

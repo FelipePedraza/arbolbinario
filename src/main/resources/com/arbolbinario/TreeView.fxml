@@ -44,8 +44,8 @@
 
     <!-- Panel derecho con ScrollPane para el árbol -->
     <center>
-        <ScrollPane fx:id="scrollPane" pannable="true">
-            <Pane fx:id="treePane" style="-fx-background-color: white;" />
+        <ScrollPane fx:id="scrollPane" pannable="true" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED">
+            <Pane fx:id="treePane" style="-fx-background-color: white;" minWidth="200" minHeight="200" />
         </ScrollPane>
     </center>
 

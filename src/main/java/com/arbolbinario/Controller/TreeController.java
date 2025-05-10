@@ -14,6 +14,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextBoundsType;
+import javafx.stage.Stage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,9 +28,29 @@ public class TreeController {
 
     private ArbolBinario tree = new ArbolBinario();
     private Map<Node, Point2D> nodePositions = new HashMap<>();
-    private double nextX;                       // contador de posiciones horizontales
-    private final double horizontalSpacing = 50; // espacio horizontal fijo
-    private final double verticalSpacing = 80;   // espacio vertical fijo
+    private double nextX;                      
+    private final double horizontalSpacing = 50;
+    private final double verticalSpacing = 80; 
+    private final double MAX_WINDOW_WIDTH = 1200;
+    private final double MAX_WINDOW_HEIGHT = 900;
+    private final double LEFT_PANEL_WIDTH = 250;
+    private final double BOTTOM_AREA_HEIGHT = 150;
+
+    @FXML
+    public void initialize() {
+        scrollPane.setPannable(true);
+        scrollPane.setFitToWidth(false);
+        scrollPane.setFitToHeight(false);
+        scrollPane.viewportBoundsProperty().addListener((obs, oldBounds, newBounds) -> {
+            if (newBounds.getWidth() > 0 && newBounds.getHeight() > 0) {
+                treePane.setMinWidth(newBounds.getWidth());
+                treePane.setMinHeight(newBounds.getHeight());
+                if (!nodePositions.isEmpty()) {
+                    redraw();
+                }
+            }
+        });
+    }
 
     @FXML
     private void onInsert() {
@@ -78,7 +99,6 @@ public class TreeController {
             outputArea.setText(found ? "Encontrado: " + v : "No encontrado: " + v);
             redraw();
             if (found) {
-                // calcula posiciones y resalta camino
                 nextX = 0;
                 nodePositions.clear();
                 computePositions(tree.getRoot(), 0);
@@ -180,17 +200,38 @@ public class TreeController {
 
         double totalWidth = nextX * horizontalSpacing;
         double totalHeight = (tree.height() + 1) * verticalSpacing;
-        treePane.setPrefWidth(Math.max(totalWidth, scrollPane.getWidth()));
-        treePane.setPrefHeight(Math.max(totalHeight, scrollPane.getHeight()));
-
+        
+        treePane.setPrefWidth(Math.max(totalWidth + 100, scrollPane.getViewportBounds().getWidth()));
+        treePane.setPrefHeight(Math.max(totalHeight + 50, scrollPane.getViewportBounds().getHeight()));
+        
+        Stage stage = (Stage) treePane.getScene().getWindow();
+        if (stage != null) {
+            boolean needsResize = false;
+            
+            double newWidth = stage.getWidth();
+            if (totalWidth > stage.getWidth() - LEFT_PANEL_WIDTH) {
+                newWidth = Math.min(totalWidth + LEFT_PANEL_WIDTH + 50, MAX_WINDOW_WIDTH);
+                needsResize = true;
+            }
+            
+            double newHeight = stage.getHeight();
+            if (totalHeight > stage.getHeight() - BOTTOM_AREA_HEIGHT) {
+                newHeight = Math.min(totalHeight + BOTTOM_AREA_HEIGHT + 30, MAX_WINDOW_HEIGHT);
+                needsResize = true;
+            }
+            
+            if (needsResize) {
+                stage.setWidth(newWidth);
+                stage.setHeight(newHeight);
+            }
+        }
 
         double offsetX = (treePane.getPrefWidth() - totalWidth) / 2;
 
-        // Dibujar aristas y nodos según posiciones calculadas
         for (Map.Entry<Node, Point2D> entry : nodePositions.entrySet()) {
             Node node = entry.getKey();
             Point2D pos = entry.getValue();
-            double adjustedX = pos.getX() + offsetX; // Ajustar posición X
+            double adjustedX = pos.getX() + offsetX;
 
             if (node.getLeft() != null) {
                 Point2D leftPos = nodePositions.get(node.getLeft());
@@ -204,7 +245,6 @@ public class TreeController {
             }
         }
 
-        // Dibujar nodos
         for (Map.Entry<Node, Point2D> entry : nodePositions.entrySet()) {
             Point2D pos = entry.getValue();
             double adjustedX = pos.getX() + offsetX; // Ajustar posición X
@@ -220,9 +260,6 @@ public class TreeController {
         }
     }
 
-    /**
-     * Asigna posiciones X,Y a cada nodo usando recorrido inorden.
-     */
     private void computePositions(Node node, int depth) {
         if (node == null) return;
         computePositions(node.getLeft(), depth + 1);
@@ -233,11 +270,7 @@ public class TreeController {
         computePositions(node.getRight(), depth + 1);
     }
 
-    /**
-     * Dibuja una línea resaltada hasta el nodo buscado.
-     */
     private void highlightSearchPath(int value) {
-        // encuentra ruta simples: sube y baja para ubicar
         Node current = tree.getRoot();
         double totalWidth = nextX * horizontalSpacing;
         double offsetX = (treePane.getPrefWidth() - totalWidth) / 2;
