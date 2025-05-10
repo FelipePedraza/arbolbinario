@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="339.0" prefWidth="549.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.arbolbinario.Controller.TreeController">
+    <!-- Panel izquierdo con controles agrupados -->
+    <left>
+    <!-- Panel izquierdo con controles juntos -->
+    <ScrollPane fitToHeight="true" fitToWidth="true" style="-fx-background-color:transparent;">
+        <VBox alignment="TOP_LEFT" prefHeight="230.0" prefWidth="262.0" spacing="10" style="-fx-padding:10; -fx-background-color: #f0f0f0;">
+            <HBox alignment="CENTER_LEFT" spacing="5">
+                <Label text="Valor:" />
+                <TextField fx:id="tfValue" prefWidth="80" promptText="Enter value" />
+            </HBox>
+            <FlowPane hgap="5" prefHeight="175.0" prefWidth="219.0" prefWrapLength="140" vgap="5">
+                <Button onAction="#onInsert" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Insertar" />
+                <Button onAction="#onDelete" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Eliminar" />
+                <Button onAction="#onSearch" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Buscar" />
+                <Button onAction="#onPreorder" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Preorden" />
+                <Button onAction="#onInorder" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Inorden" />
+                <Button onAction="#onPostorder" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Postorden" />
+                <Button onAction="#onWeight" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Peso" />
+                <Button onAction="#onHeight" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Altura" />
+               <Button onAction="#onLevel" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Nivel" />
+                <Button onAction="#onLeafCount" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Hojas" />
+                <Button onAction="#onMinValue" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Mínimo" />
+                <Button onAction="#onMaxValue" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Máximo" />
+               <Button onAction="#onClear" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Limpiar" />
+               <Button onAction="#onWidth" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Amplitud" />
+               <Button onAction="#onLevelOrden" style="-fx-background-color: #2ecc71; -fx-text-fill: white;" text="Levelorden" />
+            </FlowPane>
+        </VBox>
+    </ScrollPane>
+</left>
+
+    <!-- Panel derecho con ScrollPane para el árbol -->
+    <center>
+        <ScrollPane fx:id="scrollPane" pannable="true">
+            <Pane fx:id="treePane" style="-fx-background-color: white;" />
+        </ScrollPane>
+    </center>
+
+    <!-- Área de salida en la parte inferior -->
+    <bottom>
+        <TextArea fx:id="outputArea" editable="false" prefRowCount="3" />
+    </bottom>
+</BorderPane>
